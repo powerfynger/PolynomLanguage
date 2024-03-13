@@ -29,3 +29,12 @@ else
     echo "Build completed."
   fi
 fi
+if [[ "$1" == "forwin" ]]; then
+  echo "Cleaning up..."
+  rm -f lex.yy.c parser.tab.c
+  echo "Building..."
+  lex $LEXER_FILE
+  bison -d $PARSER_FILE
+  x86_64-w64-mingw32-gcc -o ../build/myCalc.exe main.c polynom.c lex.yy.c parser.tab.c -lm || exit 1
+  echo "Build completed."
+fi

@@ -39,6 +39,7 @@ void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
         polynomMember* tmp = (polynomMember*)malloc(sizeof(polynomMember));
         tmp->degree = secondMember->degree;
         tmp->factor = secondMember->factor;
+        tmp->nextMember = NULL;
         
         counter->nextMember = tmp;
         counter = counter->nextMember;
@@ -75,7 +76,8 @@ void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
         polynomMember* tmp = (polynomMember*)malloc(sizeof(polynomMember));
         tmp->degree = secondMember->degree;
         tmp->factor = -secondMember->factor;
-        printf("fac: %d\n", tmp->factor );
+        tmp->nextMember = NULL;
+        
         
         counter->nextMember = tmp;
         counter = counter->nextMember;
@@ -115,7 +117,7 @@ void printPolynom(polynomMember* polynom)
 {
     for(polynomMember* member = polynom; member != NULL; member = member->nextMember)
     {
-        // printf("%p\n", member);
+        if(member->factor == 0) continue;
         if (member->degree == 0)
         {
             if(member->factor >= 0) printf("+%d", member->factor);

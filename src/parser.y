@@ -24,7 +24,7 @@
 EXPRESSION:     POLYNOM 
                 { 
                   printf( "\nResult of expression:\n");
-                  printPolynom($$); 
+                  printPolynom((polynomMember*)$$); 
                 }
 
 POLYNOM:        FACTOR
@@ -35,20 +35,20 @@ POLYNOM:        FACTOR
                 | POLYNOM '+' FACTOR 
                 {
                   printf("From poly + factor to poly\n");
-                  summPolynom($1, $3);
+                  summPolynom((polynomMember*)$1, (polynomMember*)$3);
                   $$ = $1;
                 }
                 | POLYNOM '-' FACTOR 
                 {
                   printf("From poly - factor to poly\n");
-                  substractPolynom($1, $3);
+                  substractPolynom((polynomMember*)$1, (polynomMember*)$3);
                   $$ = $1;
                 }
                 | POLYNOM '*' POLYNOM
                 {
                   printf("From POLYNOM * POLYNOM to POLYNOM\n");
                   
-                  $$ = multiplePolynomByPolynom($1, $3);
+                  $$ = multiplePolynomByPolynom((polynomMember*)$1, (polynomMember*)$3);
                 }
                 
 ;
@@ -77,13 +77,13 @@ POWER_X:
                  POWER_X '^' POWER 
                 {
                   printf("From power_x ^ power:%d to power_x\n", $3);
-                  powPolynom($1, $3);
+                  powPolynom((polynomMember*)$1, (polynomMember*)$3);
                   $$ = $1;
                 }
                 | POWER
                 {
                   printf("From power to power_x\n");
-                  $$ = createPolynom($1, 0);
+                  $$ = createPolynom((polynomMember*)$1, 0);
                   
                 }
                 | 'x'
@@ -93,7 +93,7 @@ POWER_X:
                 }
                 | POWER POWER_X
                 {
-                  multiplePolynomByFactor($2, $1);
+                  multiplePolynomByFactor((polynomMember*)$2, (int)$1);
                   $$ = $2;
                 }
                 | '(' POLYNOM ')'
@@ -105,9 +105,9 @@ POWER_X:
                 |  POWER_X '*' POWER_X
                 {
                   printf("From power_x * power_x to power_x\n");
-                  printPolynom($1);
-                  printPolynom($3);
-                  $$ = multiplePolynomByPolynom($1, $3);
+                  printPolynom((polynomMember*)$1);
+                  printPolynom((polynomMember*)$3);
+                  $$ = multiplePolynomByPolynom((polynomMember*)$1, (polynomMember*)$3);
                 }
 
 ATOM:           NUM 
