@@ -43,7 +43,7 @@ void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
         counter->nextMember = tmp;
         counter = counter->nextMember;
     }
-    printPolynom(firstPolynom);
+    // printPolynom(firstPolynom);
 }
 
 void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
@@ -80,7 +80,7 @@ void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
         counter->nextMember = tmp;
         counter = counter->nextMember;
     }
-    printPolynom(firstPolynom);
+    // printPolynom(firstPolynom);
 }
 
 polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
@@ -115,6 +115,7 @@ void printPolynom(polynomMember* polynom)
 {
     for(polynomMember* member = polynom; member != NULL; member = member->nextMember)
     {
+        // printf("%p\n", member);
         if (member->degree == 0)
         {
             if(member->factor >= 0) printf("+%d", member->factor);

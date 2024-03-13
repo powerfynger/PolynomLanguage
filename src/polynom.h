@@ -1,7 +1,8 @@
 #ifndef POLYNOM_H
 #define POLYNOM_H
-#include <ctype.h>
-#define YYSTYPE __uint64_t
+// #include <ctype.h>
+#include <stdint.h>
+#define YYSTYPE uint64_t
 #include <stdio.h>
 #include <malloc.h>
 typedef struct polynomMember

@@ -3,5 +3,6 @@
 
 int main() {
     yyparse();
+    printf("\nEnd\n");
     return 0;
 }

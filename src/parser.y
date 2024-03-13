@@ -23,6 +23,7 @@
 
 EXPRESSION:     POLYNOM 
                 { 
+                  printf( "\nResult of expression:\n");
                   printPolynom($$); 
                 }
 
@@ -39,7 +40,7 @@ POLYNOM:        FACTOR
                 }
                 | POLYNOM '-' FACTOR 
                 {
-                  printf("From poly + factor to poly\n");
+                  printf("From poly - factor to poly\n");
                   substractPolynom($1, $3);
                   $$ = $1;
                 }
@@ -99,11 +100,13 @@ POWER_X:
                 {
                   printf("From polynom to power_x\n");
                   $$ = $2;
+                  // printPolynom($$);
                 }
                 |  POWER_X '*' POWER_X
                 {
                   printf("From power_x * power_x to power_x\n");
-                  
+                  printPolynom($1);
+                  printPolynom($3);
                   $$ = multiplePolynomByPolynom($1, $3);
                 }
 
