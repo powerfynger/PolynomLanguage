@@ -7,6 +7,7 @@
 #include <malloc.h>
 typedef struct polynomMember
 {
+    char base;
     int factor;
     int degree;
     struct polynomMember* nextMember;   
@@ -14,12 +15,14 @@ typedef struct polynomMember
 
 
 
-polynomMember* createPolynom(int initFactor, int initDegree);
+polynomMember* createPolynom(int initFactor, int initDegree, char initBase);
 void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom);
 void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom);
 polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom);
 void multiplePolynomByFactor(polynomMember* firstPolynom, int factor);
 void powPolynom(polynomMember* polynom, int deg);
 void printPolynom(polynomMember* polynom);
+void checkPolynomBases(polynomMember* firstPolynom, polynomMember* secondPolynom);
+void sortPolynom(polynomMember* poly);
 
 #endif

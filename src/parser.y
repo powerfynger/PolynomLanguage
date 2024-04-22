@@ -18,6 +18,8 @@
 %}
 
 %token NUM
+%token LETTER
+
 
 %%
 
@@ -83,13 +85,14 @@ POWER_X:
                 | POWER
                 {
                   // printf("From power to power_x\n");
-                  $$ = createPolynom((polynomMember*)$1, 0);
+                  $$ = createPolynom((polynomMember*)$1, 0, 0);
                   
                 }
-                | 'x'
+                | LETTER
                 {
-                  // printf("Init x\n");
-                  $$ = createPolynom(1, 1);
+                  char a = $1;
+                  $$ = createPolynom(1, 1, a);
+                  // printf("Init base: %c\n", a);
                 }
                 | POWER POWER_X
                 {
@@ -105,8 +108,8 @@ POWER_X:
                 |  POWER_X '*' POWER_X
                 {
                   // printf("From power_x * power_x to power_x\n");
-                  printPolynom((polynomMember*)$1);
-                  printPolynom((polynomMember*)$3);
+                  // printPolynom((polynomMember*)$1);
+                  // printPolynom((polynomMember*)$3);
                   $$ = multiplePolynomByPolynom((polynomMember*)$1, (polynomMember*)$3);
                 }
 

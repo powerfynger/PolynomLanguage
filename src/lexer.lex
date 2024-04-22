@@ -7,12 +7,16 @@
 
 %%
 
-[0-9]+          { yylval = atoi(yytext);
-                  return NUM;
+[0-9]+          { 
+                yylval = atoi(yytext);
+                return NUM;
                 }
 [ \t\r\n]      ; // whitespace
-[e]            {return EOF;}
-[xX]           {return 'x';  }
+[;]            { return EOF; }
+[a-zA-Z]       { 
+                 yylval =  *yytext;
+                 return LETTER; 
+               }
 .              { return *yytext; }
 
 %%
