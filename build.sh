@@ -6,7 +6,7 @@ LEXER_FILE="lexer.lex"
 PARSER_FILE="parser.y"
 
 if [ -z "$1" ]; then
-  echo "No argument provided. Usage: $0 (win|linux)"
+  echo "No argument provided. Usage: $0 (win|linux|forwin)"
   exit 1
 fi
 
