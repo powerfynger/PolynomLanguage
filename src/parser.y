@@ -52,6 +52,16 @@ POLYNOM:        FACTOR
                   
                   $$ = multiplePolynomByPolynom((polynomMember*)$1, (polynomMember*)$3);
                 }
+                | POLYNOM '+' POLYNOM
+                {
+                  summPolynom((polynomMember*)$1, (polynomMember*)$3);
+                  $$ = $1;
+                }
+                | POLYNOM '-' POLYNOM
+                {
+                  substractPolynom((polynomMember*)$1, (polynomMember*)$3);
+                  $$ = $1;
+                }
                 
 ;
 

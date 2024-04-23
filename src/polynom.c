@@ -13,14 +13,10 @@ polynomMember* createPolynom(int initFactor, int initDegree, char initBase)
 
 void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 {
-    // printf("First checK\n");
-    // printf("First base: %d, second base: %d\n", firstPolynom->base, secondPolynom->base);
     checkPolynomBases(firstPolynom, secondPolynom);
     if (firstPolynom->base != 0) secondPolynom->base = firstPolynom->base;
     else firstPolynom->base = secondPolynom->base;
 
-    // printf("Second checK\n");
-    // printf("First base: %d, second base: %d\n", firstPolynom->base, secondPolynom->base);
     polynomMember* counter;
     counter = firstPolynom;
     while (counter->nextMember != NULL)
@@ -61,7 +57,9 @@ void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 {
     checkPolynomBases(firstPolynom, secondPolynom);
-
+    if (firstPolynom->base != 0) secondPolynom->base = firstPolynom->base;
+    else firstPolynom->base = secondPolynom->base;
+    
     polynomMember* counter;
     counter = firstPolynom;
     while (counter->nextMember != NULL)
@@ -101,6 +99,8 @@ void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 {
     checkPolynomBases(firstPolynom, secondPolynom);
+    if (firstPolynom->base != 0) secondPolynom->base = firstPolynom->base;
+    else firstPolynom->base = secondPolynom->base;
 
     polynomMember* tmp = NULL;
     if (firstPolynom->base != 0)
