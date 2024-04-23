@@ -84,7 +84,7 @@ POWER_X:
                 }
                 | POWER
                 {
-                  // printf("From power to power_x\n");
+                  // printf("From power %d to power_x\n", $1);
                   $$ = createPolynom((polynomMember*)$1, 0, 0);
                   
                 }

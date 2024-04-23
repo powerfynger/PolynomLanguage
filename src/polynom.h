@@ -24,5 +24,7 @@ void powPolynom(polynomMember* polynom, int deg);
 void printPolynom(polynomMember* polynom);
 void checkPolynomBases(polynomMember* firstPolynom, polynomMember* secondPolynom);
 void sortPolynom(polynomMember* poly);
+void printPolynomDebug(polynomMember* poly);
+void changePolynomBase(polynomMember* poly, char newBase);
 
 #endif

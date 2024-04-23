@@ -13,7 +13,14 @@ polynomMember* createPolynom(int initFactor, int initDegree, char initBase)
 
 void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 {
+    // printf("First checK\n");
+    // printf("First base: %d, second base: %d\n", firstPolynom->base, secondPolynom->base);
     checkPolynomBases(firstPolynom, secondPolynom);
+    if (firstPolynom->base != 0) secondPolynom->base = firstPolynom->base;
+    else firstPolynom->base = secondPolynom->base;
+
+    // printf("Second checK\n");
+    // printf("First base: %d, second base: %d\n", firstPolynom->base, secondPolynom->base);
     polynomMember* counter;
     counter = firstPolynom;
     while (counter->nextMember != NULL)
@@ -41,6 +48,8 @@ void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
         polynomMember* tmp = (polynomMember*)malloc(sizeof(polynomMember));
         tmp->degree = secondMember->degree;
         tmp->factor = secondMember->factor;
+        tmp->base = secondMember->base;
+
         tmp->nextMember = NULL;
         
         counter->nextMember = tmp;
@@ -93,7 +102,6 @@ polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMemb
 {
     checkPolynomBases(firstPolynom, secondPolynom);
 
-
     polynomMember* tmp = NULL;
     if (firstPolynom->base != 0)
     {
@@ -133,6 +141,7 @@ void printPolynom(polynomMember* polynom)
     sortPolynom(polynom);
     for(polynomMember* member = polynom; member != NULL; member = member->nextMember)
     {
+        // printPolynomDebug(member);
         if(member->factor == 0) continue;
         if (member->degree == 0)
         {
@@ -142,7 +151,7 @@ void printPolynom(polynomMember* polynom)
         else if (member->degree == 1)
         {
             if(member->factor >= 0) printf("+%d%c", member->factor, member->base);
-            else printf("%dx", member->factor);
+            else printf("%d%c", member->factor, member->base);
         }
         else 
         {
@@ -194,4 +203,22 @@ void sortPolynom(polynomMember* poly)
         }
         lptr = ptr1;
     } while (swapped);
+}
+
+void printPolynomDebug(polynomMember* poly)
+{
+    printf("\n{\n\tbase: %c\n\tfactor: %d\n\tdegree: %d\n\tNext member: %p\n}\n",
+    poly->base, poly->factor, poly->degree, poly->nextMember);
+}
+
+void changePolynomBase(polynomMember* poly, char newBase)
+{
+    polynomMember* counter;
+    counter = poly;
+    while (counter != NULL)
+    {
+        counter->base = newBase;
+        counter = counter->nextMember;
+    }
+
 }
