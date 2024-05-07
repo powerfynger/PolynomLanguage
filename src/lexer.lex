@@ -18,13 +18,16 @@
               }
 [ \t\r\n]      ; // whitespace
 [;]            { return EOF; }
-[a-zA-Z]       { 
+[a-z]         { 
                  yylval =  *yytext;
                  return LETTER; 
                }
+[A-Z]         { 
+                 yylval =  *yytext;
+                 return VAR; 
+               }
 "#"[^ \t\r\n]* { 
-                // Найден однострочный комментарий, игнорируем его
-                yylineno++; // Увеличиваем счетчик строк
+                yylineno++;
                 }
 
 .              { return *yytext; }

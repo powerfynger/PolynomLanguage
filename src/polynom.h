@@ -15,6 +15,16 @@ typedef struct polynomMember
 
 
 
+void addToVariables(char var);
+void addToPolynoms(polynomMember* poly);
+void addVariable(char var, polynomMember* poly);
+polynomMember* getVariable(char var);
+
+polynomMember* summVariableAndPolynom(char var, polynomMember* poly);
+void addPolynomToVariable(char var, polynomMember* poly);
+
+void duplicatePolynom(polynomMember* dst, polynomMember* src);
+
 polynomMember* createPolynom(int initFactor, int initDegree, char initBase);
 void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom);
 void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom);

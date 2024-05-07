@@ -1,5 +1,9 @@
 #include "polynom.h"
 
+char localVariables[26];
+polynomMember* localPolynoms[26];
+
+int localVariablesLen = 0, localPolynomsLen = 0;
 
 polynomMember* createPolynom(int initFactor, int initDegree, char initBase)
 {
@@ -61,38 +65,44 @@ void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
     else firstPolynom->base = secondPolynom->base;
     
     polynomMember* counter;
-    counter = firstPolynom;
+    counter = secondPolynom;
+    counter->factor *= -1;
+
     while (counter->nextMember != NULL)
     {
+        printf("fac: %d\n", counter->factor);
         counter = counter->nextMember;
+        counter->factor *= -1;
     }
 
+    summPolynom(firstPolynom, secondPolynom);
 
-    polynomMember* nextMemberFirst = firstPolynom->nextMember;
+
+    // polynomMember* nextMemberFirst = firstPolynom->nextMember;
     
-    for(polynomMember* secondMember = secondPolynom; secondMember != NULL; secondMember = secondMember->nextMember)
-    {
-        int added = 0;
-        for ( polynomMember* counterTmp =  firstPolynom; counterTmp != NULL; counterTmp = counterTmp->nextMember)
-        {
-            if(counterTmp->degree == secondMember->degree)
-            {
-                counterTmp->factor -= secondMember->factor;
-                added = 1;
-                break;
-            }
-        } 
-        if (added) continue;
+    // for(polynomMember* secondMember = secondPolynom; secondMember != NULL; secondMember = secondMember->nextMember)
+    // {
+    //     int added = 0;
+    //     for ( polynomMember* counterTmp =  firstPolynom; counterTmp != NULL; counterTmp = counterTmp->nextMember)
+    //     {
+    //         if(counterTmp->degree == secondMember->degree)
+    //         {
+    //             counterTmp->factor -= secondMember->factor;
+    //             added = 1;
+    //             break;
+    //         }
+    //     } 
+    //     if (added) continue;
 
-        polynomMember* tmp = (polynomMember*)malloc(sizeof(polynomMember));
-        tmp->degree = secondMember->degree;
-        tmp->factor = -secondMember->factor;
-        tmp->nextMember = NULL;
+    //     polynomMember* tmp = (polynomMember*)malloc(sizeof(polynomMember));
+    //     tmp->degree = secondMember->degree;
+    //     tmp->factor = -secondMember->factor;
+    //     tmp->nextMember = NULL;
         
         
-        counter->nextMember = tmp;
-        counter = counter->nextMember;
-    }
+    //     counter->nextMember = tmp;
+    //     counter = counter->nextMember;
+    // }
     // printPolynom(firstPolynom);
 }
 
@@ -220,5 +230,66 @@ void changePolynomBase(polynomMember* poly, char newBase)
         counter->base = newBase;
         counter = counter->nextMember;
     }
-
 }
+
+void addVariable(char var, polynomMember* poly)
+{
+    addToVariables(var);
+    addToPolynoms(poly);
+}
+
+void addToVariables(char var)
+{
+    localVariables[localVariablesLen] = var; 
+    localVariablesLen++;
+}
+
+void addToPolynoms(polynomMember* poly)
+{
+    if (localVariablesLen - 1 != localPolynomsLen)
+    {
+        printf("Something went wrong with vars. . .\n");
+        exit(-1);
+    }
+    if (localPolynoms[localPolynomsLen] != NULL)
+    {
+        free(localPolynoms[localPolynomsLen]);
+    }
+    localPolynoms[localPolynomsLen] = poly;
+    localPolynomsLen++;
+}
+
+polynomMember* getVariable(char var)
+{
+    int i;
+    for(i = 0; i < 26; i++)
+    {
+        if(localVariables[i] == var)
+            return localPolynoms[i];
+    }
+    return NULL;
+}
+polynomMember* summVariableAndPolynom(char var, polynomMember* poly)
+{
+    polynomMember* secondPoly = getVariable(var);
+    if(secondPoly == NULL) return NULL;
+    summPolynom(poly, secondPoly);
+    return poly;
+}
+
+void addPolynomToVariable(char var, polynomMember* poly)
+{
+    int i;
+    for (i = 0; i < 26; i++)
+    {
+        if(localVariables[i] == var)
+        {
+            summPolynom(localPolynoms[i], poly);
+        }
+    }
+}
+
+// void duplicatePolynom(polynomMember* dst, polynomMember* src)
+// {
+
+// }
