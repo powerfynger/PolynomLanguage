@@ -126,8 +126,10 @@ INITIAL_POLYNOM:
                  INITIAL_POLYNOM '^' POWER 
                 {
                   printf("From INITIAL_POLYNOM ^ power:%d to INITIAL_POLYNOM\n", $3);
-                  powPolynom((polynomMember*)$1, (polynomMember*)$3);
-                  $$ = $1;
+                  // powPolynom((polynomMember*)$1, $3);
+                  $$ = powPolynom((polynomMember*)$1, $3);
+                  // printf("DEEEECH: ");
+                  // printPolynom($$);
                 }
                 | POWER
                 {

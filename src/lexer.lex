@@ -26,7 +26,7 @@
                  yylval =  *yytext;
                  return VAR; 
                }
-"#"[^ \t\r\n]* { 
+"#".* { 
                 yylineno++;
                 }
 

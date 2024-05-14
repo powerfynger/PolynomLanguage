@@ -17,6 +17,11 @@ polynomMember* createPolynom(int initFactor, int initDegree, char initBase)
 
 void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 {
+    // printf("\nFirst summand: ");
+    // printPolynom(firstPolynom);
+    // printf("Second summand: ");
+    // printPolynom(secondPolynom);
+    
     checkPolynomBases(firstPolynom, secondPolynom);
     if (firstPolynom->base != 0) secondPolynom->base = firstPolynom->base;
     else firstPolynom->base = secondPolynom->base;
@@ -39,6 +44,8 @@ void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
             if(counterTmp->degree == secondMember->degree)
             {
                 counterTmp->factor += secondMember->factor;
+                // secondMember->factor = 0;
+                // secondMember->degree = 0;
                 added = 1;
                 break;
             }
@@ -70,7 +77,7 @@ void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 
     while (counter->nextMember != NULL)
     {
-        printf("fac: %d\n", counter->factor);
+        // printf("fac: %d\n", counter->factor);
         counter = counter->nextMember;
         counter->factor *= -1;
     }
@@ -113,6 +120,8 @@ polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMemb
     else firstPolynom->base = secondPolynom->base;
 
     polynomMember* tmp = NULL;
+    // malloc()
+    
     if (firstPolynom->base != 0)
     {
         tmp = createPolynom(0, 1, firstPolynom->base);
@@ -139,11 +148,29 @@ void multiplePolynomByFactor(polynomMember* firstPolynom, int factor)
     // printPolynom(firstPolynom);
 }
 
-void powPolynom(polynomMember* polynom, int deg)
+polynomMember* powPolynom(polynomMember* polynom, int deg)
 {
-    polynom->degree *= deg;
+    // if (deg <= 1) return;
+    // printf("MULT DEG: %d\n", deg);
+    polynomMember* tmp = polynom;
+    for (int i = 1; i < deg; i++)
+    {
+        // printPolynom(tmp);
+        // printf("\n-------\n");
+        // printPolynom(polynom);
+        tmp = multiplePolynomByPolynom(tmp, polynom);
+        // polynom = tmp;
+        // polynom->degree *= polynom->degree;
+        // printf("\nDEG: %d\n", polynom->degree);
+    }
+    // polynom = tmp;
     // printf("Pow poly: ");
-    // printPolynom(polynom);
+    return tmp;
+}
+
+void powPolynomStatement(polynomMember* polynom, int deg)
+{
+
 }
 
 void printPolynom(polynomMember* polynom)
