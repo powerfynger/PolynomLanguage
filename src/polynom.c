@@ -150,33 +150,45 @@ void multiplePolynomByFactor(polynomMember* firstPolynom, int factor)
 
 polynomMember* powPolynom(polynomMember* polynom, int deg)
 {
-    // if (deg <= 1) return;
-    // printf("MULT DEG: %d\n", deg);
-    polynomMember* tmp = polynom;
-    for (int i = 1; i < deg; i++)
+    polynomMember* tmp = createPolynom(1, 0, polynom->base);
+    for (int i = 0; i < deg; i++)
     {
-        // printPolynom(tmp);
-        // printf("\n-------\n");
-        // printPolynom(polynom);
         tmp = multiplePolynomByPolynom(tmp, polynom);
-        // polynom = tmp;
-        // polynom->degree *= polynom->degree;
-        // printf("\nDEG: %d\n", polynom->degree);
     }
-    // polynom = tmp;
-    // printf("Pow poly: ");
     return tmp;
 }
 
-void powPolynomStatement(polynomMember* polynom, int deg)
+polynomMember* powPolynomStatement(polynomMember* polynom, polynomMember* deg)
 {
-
+    sortPolynom(deg);
+    printPolynom(deg);
+    if (deg->degree == 0)
+    {
+        polynomMember* tmp = createPolynom(1, 0, polynom->base);
+        for (int i = 0; i < deg->degree; i++)
+        {
+            tmp = multiplePolynomByPolynom(tmp, polynom);
+        }
+        return tmp;
+    }
+    printf("Error: trying to polynom ^ polynom\n");
+    exit(1);
 }
 
 void printPolynom(polynomMember* polynom)
 {
     sortPolynom(polynom);
-    for(polynomMember* member = polynom; member != NULL; member = member->nextMember)
+    polynomMember* member = polynom;
+
+    // if(member->factor == 0);
+    // if (member->degree == 0) printf("%d", member->factor);
+    // else{
+        // if (member->degree == 1)  printf("%c^%d", member->base, member->degree);
+        // if (member->degree > 1)  printf("%d%c^%d", member->factor, member->base, member->degree);
+
+    // }
+    // member = member->nextMember;
+    for(member; member != NULL; member = member->nextMember)
     {
         // printPolynomDebug(member);
         if(member->factor == 0) continue;

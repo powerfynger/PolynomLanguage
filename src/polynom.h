@@ -31,7 +31,7 @@ void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom);
 void multiplePolynomByFactor(polynomMember* firstPolynom, int factor);
 polynomMember* powPolynom(polynomMember* polynom, int deg);
-// void powPolynomStatement(polynomMember* polynom, int deg);
+polynomMember* powPolynomStatement(polynomMember* polynom, polynomMember* deg);
 void printPolynom(polynomMember* polynom);
 void checkPolynomBases(polynomMember* firstPolynom, polynomMember* secondPolynom);
 void sortPolynom(polynomMember* poly);
