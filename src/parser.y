@@ -14,119 +14,189 @@
 %token VAR
 %define parse.error detailed
 %left '+' '-' '*' 
-
+%right '^'
 
 %%
 
-OUTPUT:
-    POLYNOM
-    {
-      // printf("\n-------------END-------------\n");
-      printPolynom($$);
-    }
+
+INPUT:
+    |INPUT LINE
+    ;
+    
+
+LINE:
+    STATEMENT 
+    | POLYNOM ';'
+    ;
+
+STATEMENT:    ':' POLYNOM ';'
+              {
+                printPolynom($2);
+                printf("\n");
+              }
+              | EQUATION
 
 
-
-EQUATION:       VAR '=' INITIAL_POLYNOM 
-                {
-                  addVariable($1, $3);
-                  // // printPolynom($3);
-                  // // printf("=Adding new var\n");
-                }
-                | EQUATION VAR '=' INITIAL_POLYNOM 
-                {
-                  addVariable($2, $4);
-                  // // printPolynom($4);
-                  // // printf("=Adding new var\n");
-                }
 
 POLYNOM:        FACTOR
                 {
                   $$ = $1;
-                  // // printPolynom($$);
-                  // // printf("From factor to poly\n");
+                  // printPolynom($$);
+                  #ifdef DEBUG
+                  printf("From factor to poly\n");
+                  #endif
                 }
-
-                | EQUATION '(' POLYNOM ')'
+                | VAR
                 {
-                  // // printf("From EQUATION ( poly to poly\n");
-                  // summPolynom((polynomMember*)$3, getVariable($1));
-                  // // printPolynom((polynomMember*)$3);
-                  // // printf("\n\n\n");
-                  $$ = $3;
+                  // printPolynom(getVariable($1));
+                  #ifdef DEBUG
+                  printf("=====From var to POLYNOM=====\n");
+                  #endif
+                  polynomMember* tmp = createPolynom(0, 0, 0);
+                  summPolynom(tmp, getVariable($1));
+                  $$ = tmp;
                 }
-                | POLYNOM '+' FACTOR 
+                /* | '-' VAR
                 {
-                  // // printf("From poly + factor to poly\n");
-                  summPolynom((polynomMember*)$1, (polynomMember*)$3);
-                  $$ = $1;
-                }
-                | POLYNOM '-' FACTOR 
-                {
-                  // printf("From poly - factor to poly\n");
-                  substractPolynom((polynomMember*)$1, (polynomMember*)$3);
-                  $$ = $1;
-                }
+                  // printPolynom(getVariable($2));
+                  // printf("=====From var to POLYNOM=====\n");
+                  polynomMember* tmp = createPolynom(0, 0, 0);
+                  summPolynom(tmp, getVariable($2));
+                  multiplePolynomByFactor(tmp, -1);
+                  $$ = tmp;
+                } */
                 | POLYNOM '*' POLYNOM
                 {
-                  // printf("From POLYNOM * POLYNOM to POLYNOM\n");
+                  #ifdef DEBUG
+                  printf("From POLYNOM * POLYNOM to POLYNOM\n");
+                  #endif
                   
                   $$ = multiplePolynomByPolynom((polynomMember*)$1, (polynomMember*)$3);
                 }
                 | POLYNOM '+' POLYNOM
                 {
-                  // printf("From POLYNOM + POLYNOM to POLYNOM\n");
+                  #ifdef DEBUG
+                  printf("From POLYNOM + POLYNOM to POLYNOM\n");
+                  #endif
                   // printPolynom((polynomMember*)$1);
                   // printf("\n\n");
                   // printPolynom((polynomMember*)$3);
                                     // printf("\n\n");
 
                   summPolynom((polynomMember*)$1, (polynomMember*)$3);
-                  // printPolynom((polynomMember*)$1);
+                  // // printPolynom((polynomMember*)$1);
                   $$ = $1;
                 }
                 | POLYNOM '-' POLYNOM
                 {
-                  // printf("From POLYNOM - POLYNOM to POLYNOM\n");
-                  // printPolynom((polynomMember*)$1);
-                  // printf("\n\n");
-                  // printPolynom((polynomMember*)$3);
+                  #ifdef DEBUG
+                  printf("From POLYNOM - POLYNOM to POLYNOM\n");
+                  #endif
+                  // // printPolynom((polynomMember*)$1);
+                  // // printf("\n\n");
+                  // // printPolynom((polynomMember*)$3);
                   substractPolynom((polynomMember*)$1, (polynomMember*)$3);
                   $$ = $1;
-                  // printf("\n\n");
-                  // printPolynom((polynomMember*)$1);
+                  // // printf("\n\n");
+                  // // printPolynom((polynomMember*)$1);
+
+                }
+                | POLYNOM '^' POLYNOM
+                {
+                  #ifdef DEBUG
+                  printf("From POLYNOM ^ POLYNOM to POLYNOM\n");
+                  #endif
+                  // powPolynom((polynomMember*)$1, $3);
+                  $$ = powPolynomStatement((polynomMember*)$1, $3);
+                  // // printf("DEEEECH: ");
+                  // // printPolynom($$);
+
+                }
+                |  '-' POLYNOM
+                {
+                  #ifdef DEBUG
+                  printf("From -POLYNOM to POLYNOM\n");
+                  #endif
+                  // // printPolynom((polynomMember*)$1);
+                  // // printf("\n\n");
+                  // // printPolynom((polynomMember*)$3);
+                  multiplePolynomByFactor($2, -1);
+                  $$ = $2;
+                  // // printf("\n\n");
+                  // // printPolynom((polynomMember*)$1);
 
                 }
 
 
 ;
 
-                
+EQUATION:       VAR '=' POLYNOM ';'
+                {
+                  addVariable($1, $3);
+                  #ifdef DEBUG
+                  printPolynom($3);
+                  printf("=Adding new var\n");
+                  #endif
+                }
+                | EQUATION VAR '=' POLYNOM ';'
+                {
+                  addVariable($2, $4);
+                  #ifdef DEBUG
+                  printPolynom($4);
+                  printf("=Adding again new var\n");
+                  #endif
+                }
+                /* | VAR '='
+                {
+                  // printf("Caught them\n");
+                } */
+
 FACTOR:         INITIAL_POLYNOM
                 {
-                  // printf("From INITIAL_POLYNOM to factor\n");
+                  #ifdef DEBUG
+                  printf("From INITIAL_POLYNOM to factor\n");
+                  #endif
                   $$ = $1;
                 }
-                |                 INITIAL_POLYNOM '^' INITIAL_POLYNOM
+                |  INITIAL_POLYNOM '^' INITIAL_POLYNOM
                 {
-                  // printf("From INITIAL_POLYNOM ^ power:%d to INITIAL_POLYNOM\n", $3);
+                  #ifdef DEBUG
+                  printf("From INITIAL_POLYNOM ^ INITIAL_POLYNOM to INITIAL_POLYNOM\n");
+                  #endif
                   // powPolynom((polynomMember*)$1, $3);
                   $$ = powPolynomStatement((polynomMember*)$1, $3);
-                  // printf("DEEEECH: ");
-                  // printPolynom($$);
+                  // // printf("DEEEECH: ");
+                  // // printPolynom($$);
                 } 
 
 
 POWER:          ATOM
                 {
-                  // printf("From atom: %d to power\n", $1);
+                  #ifdef DEBUG
+                  printf("From atom: %d to power\n", $1);
+                  #endif
                   $$ = $1;
                 }
                 | ATOM '^' POWER 
                 {
-                  // printf("From atom:%d ^ power:%d to power: %d\n", $1,  $3, $$);
+                  if ($1 == 0 && $3 == 0)
+                  {
+                    printf("Error 0^0\n");
+                    exit(1);
+                  }
                   $$ = (int)pow($1, $3);
+                  #ifdef DEBUG
+                  printf("From atom:%d ^ power:%d to power: %d\n", $1,  $3, $$);
+                  #endif
                 }
+                /* | '-' ATOM 
+                {
+                  #ifdef DEBUG
+                  printf("-ATOM\n");
+                  #endif
+                  // printf("From atom:%d ^ power:%d to power: %d\n", $1,  $3, $$);
+                  $$ = -$2;
+                } */
 
 ;
 
@@ -134,15 +204,19 @@ INITIAL_POLYNOM:
 
                 INITIAL_POLYNOM '^' POWER 
                 {
-                  // printf("From INITIAL_POLYNOM ^ power:%d to INITIAL_POLYNOM\n", $3);
+                  #ifdef DEBUG
+                  printf("From INITIAL_POLYNOM ^ power:%d to INITIAL_POLYNOM\n", $3);
+                  #endif
                   // powPolynom((polynomMember*)$1, $3);
                   $$ = powPolynom((polynomMember*)$1, $3);
-                  // printf("DEEEECH: ");
-                  // printPolynom($$);
+                  // // printf("DEEEECH: ");
+                  // // printPolynom($$);
                 }
                 | POWER
                 {
-                  // printf("From power %d to INITIAL_POLYNOM\n", $1);
+                  #ifdef DEBUG
+                  printf("From power %d to INITIAL_POLYNOM\n", $1);
+                  #endif
                   $$ = createPolynom((polynomMember*)$1, 0, 0);
                   
                 }
@@ -150,8 +224,9 @@ INITIAL_POLYNOM:
                 {
                   char a = $1;
                   $$ = createPolynom(1, 1, a);
-                  // printf("Init base: %c\n", a);
+                  // // printf("Init base: %c\n", a);
                 }
+                
                 | POWER INITIAL_POLYNOM
                 {
                   multiplePolynomByFactor((polynomMember*)$2, (int)$1);
@@ -159,28 +234,35 @@ INITIAL_POLYNOM:
                 }
                 | '(' POLYNOM ')'
                 {
-                  // printf("From polynom to INITIAL_POLYNOM\n");
+                  #ifdef DEBUG
+                  printf("From polynom to INITIAL_POLYNOM\n");
+                  #endif
                   $$ = $2;
-                  // // printPolynom($$);
+                  // // // printPolynom($$);
                 }
                 |  INITIAL_POLYNOM '*' INITIAL_POLYNOM
                 {
-                  // printf("From INITIAL_POLYNOM * INITIAL_POLYNOM to INITIAL_POLYNOM\n");
-                  // // printPolynom((polynomMember*)$1);
-                  // // printPolynom((polynomMember*)$3);
+                  #ifdef DEBUG
+                  printf("From INITIAL_POLYNOM * INITIAL_POLYNOM to INITIAL_POLYNOM\n");
+                  #endif
+                  // // // printPolynom((polynomMember*)$1);
+                  // // // printPolynom((polynomMember*)$3);
                   $$ = multiplePolynomByPolynom((polynomMember*)$1, (polynomMember*)$3);
                 }
-                | VAR
+                /* | '-' LETTER
                 {
-                  // printPolynom(getVariable($1));
-                  // printf("=====From var to INITIAL_POLYNOM=====\n");
-                  polynomMember* tmp = createPolynom(0, 0, 0);
-                  summPolynom(tmp, getVariable($1));
-                  $$ = tmp;
-                }
+                  // printf("From -LETTER\n");
+                  char a = $2;
+                  $$ = createPolynom(-1, 1, a);
+                } */
+;
+
+
+
 
 ATOM:           NUM 
                 {
+                  // #ifdef DEBUG
                   // printf("Init num: %d\n", $$);
                   $$ = $1;
                 }

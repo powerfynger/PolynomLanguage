@@ -144,12 +144,27 @@ polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMemb
 
 void multiplePolynomByFactor(polynomMember* firstPolynom, int factor)
 {
-    firstPolynom->factor *= factor; 
+    // firstPolynom->factor *= factor; 
     // printPolynom(firstPolynom);
+    polynomMember* counter;
+    counter = firstPolynom;
+    counter->factor *= factor;
+    while (counter->nextMember != NULL)
+    {
+        // printf("fac: %d\n", counter->factor);
+        counter = counter->nextMember;
+        counter->factor *= factor;
+    }
 }
 
 polynomMember* powPolynom(polynomMember* polynom, int deg)
 {
+    sortPolynom(polynom);
+    if (polynom->factor == 0 && deg == 0) 
+    {
+        printf("Error: 0^0\n");
+        exit(1);
+    }
     polynomMember* tmp = createPolynom(1, 0, polynom->base);
     for (int i = 0; i < deg; i++)
     {
@@ -161,12 +176,19 @@ polynomMember* powPolynom(polynomMember* polynom, int deg)
 polynomMember* powPolynomStatement(polynomMember* polynom, polynomMember* deg)
 {
     sortPolynom(deg);
-    printPolynom(deg);
+    sortPolynom(polynom);
+    if (polynom->factor == 0 && deg->factor == 0) 
+    {
+        printf("Error: 0^0\n");
+        exit(1);
+    }
     if (deg->degree == 0)
     {
         polynomMember* tmp = createPolynom(1, 0, polynom->base);
-        for (int i = 0; i < deg->degree; i++)
+        
+        for (int i = 0; i < deg->factor; i++)
         {
+            // printPolynom(tmp);
             tmp = multiplePolynomByPolynom(tmp, polynom);
         }
         return tmp;
@@ -179,18 +201,29 @@ void printPolynom(polynomMember* polynom)
 {
     sortPolynom(polynom);
     polynomMember* member = polynom;
+    // printPolynomDebug(polynom);
 
-    // if(member->factor == 0);
-    // if (member->degree == 0) printf("%d", member->factor);
-    // else{
-        // if (member->degree == 1)  printf("%c^%d", member->base, member->degree);
-        // if (member->degree > 1)  printf("%d%c^%d", member->factor, member->base, member->degree);
+    while(member->factor == 0 && member->nextMember != NULL)
+    {
+        member = member->nextMember;
+    }
 
-    // }
-    // member = member->nextMember;
+    
+    if (member->degree == 0)
+    {
+        printf("%d", member->factor);
+    }
+    else
+    {
+        if (member->factor != 1 && member->factor != -1)  printf("%d", member->factor);
+        if (member->factor == -1)  printf("-");
+        printf("%c",member->base);
+        if (member->degree > 1) printf("^%d", member->degree);
+        
+    }
+    member = member->nextMember;
     for(member; member != NULL; member = member->nextMember)
     {
-        // printPolynomDebug(member);
         if(member->factor == 0) continue;
         if (member->degree == 0)
         {
@@ -224,9 +257,8 @@ void sortPolynom(polynomMember* poly)
 {
     int swapped;
     polynomMember *ptr1;
-    polynomMember *lptr = NULL;
+    polynomMember *lptr = NULL, *dptr = poly;
  
-    // Проверка на пустой список
     if (poly == NULL)
         return;
  
@@ -252,6 +284,7 @@ void sortPolynom(polynomMember* poly)
         }
         lptr = ptr1;
     } while (swapped);
+    
 }
 
 void printPolynomDebug(polynomMember* poly)
@@ -273,28 +306,32 @@ void changePolynomBase(polynomMember* poly, char newBase)
 
 void addVariable(char var, polynomMember* poly)
 {
-    addToVariables(var);
-    addToPolynoms(poly);
+    addToPolynoms(poly, addToVariables(var));
 }
 
-void addToVariables(char var)
+int addToVariables(char var)
 {
+    for (int i = 0; i < localVariablesLen; i++)
+    {
+        if (localVariables[i] == var)
+        {
+            return i;
+        }
+    }
     localVariables[localVariablesLen] = var; 
-    localVariablesLen++;
+    // localVariablesLen++;
+    return localVariablesLen++;
 }
 
-void addToPolynoms(polynomMember* poly)
+void addToPolynoms(polynomMember* poly, int position)
 {
-    if (localVariablesLen - 1 != localPolynomsLen)
+    if (localPolynoms[position] != NULL)
     {
-        printf("Something went wrong with vars. . .\n");
-        exit(-1);
+        free(localPolynoms[position]);
+        localPolynoms[position] = NULL;
+        localPolynomsLen--;
     }
-    if (localPolynoms[localPolynomsLen] != NULL)
-    {
-        free(localPolynoms[localPolynomsLen]);
-    }
-    localPolynoms[localPolynomsLen] = poly;
+    localPolynoms[position] = poly;
     localPolynomsLen++;
 }
 

@@ -5,6 +5,7 @@
 #define YYSTYPE uint64_t
 #include <stdio.h>
 #include <malloc.h>
+#include <stdlib.h>
 typedef struct polynomMember
 {
     char base;
@@ -15,8 +16,8 @@ typedef struct polynomMember
 
 
 
-void addToVariables(char var);
-void addToPolynoms(polynomMember* poly);
+int addToVariables(char var);
+void addToPolynoms(polynomMember* poly, int position);
 void addVariable(char var, polynomMember* poly);
 polynomMember* getVariable(char var);
 

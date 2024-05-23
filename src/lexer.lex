@@ -17,7 +17,7 @@
                 return NUM;
               }
 [ \t\r\n]      ; // whitespace
-[;]            { return EOF; }
+[;]            { return ';'; }
 [a-z]         { 
                  yylval =  *yytext;
                  return LETTER; 
