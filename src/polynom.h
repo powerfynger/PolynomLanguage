@@ -9,15 +9,15 @@
 typedef struct polynomMember
 {
     char base;
-    int factor;
-    int degree;
+    long factor;
+    long degree;
     struct polynomMember* nextMember;   
 } polynomMember;
 
 
 
-int addToVariables(char var);
-void addToPolynoms(polynomMember* poly, int position);
+long addToVariables(char var);
+void addToPolynoms(polynomMember* poly, long position);
 void addVariable(char var, polynomMember* poly);
 polynomMember* getVariable(char var);
 
@@ -26,12 +26,12 @@ void addPolynomToVariable(char var, polynomMember* poly);
 
 void duplicatePolynom(polynomMember* dst, polynomMember* src);
 
-polynomMember* createPolynom(int initFactor, int initDegree, char initBase);
+polynomMember* createPolynom(long initFactor, long initDegree, char initBase);
 void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom);
 void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom);
 polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom);
-void multiplePolynomByFactor(polynomMember* firstPolynom, int factor);
-polynomMember* powPolynom(polynomMember* polynom, int deg);
+void multiplePolynomByFactor(polynomMember* firstPolynom, long factor);
+polynomMember* powPolynom(polynomMember* polynom, long deg);
 polynomMember* powPolynomStatement(polynomMember* polynom, polynomMember* deg);
 void printPolynom(polynomMember* polynom);
 void checkPolynomBases(polynomMember* firstPolynom, polynomMember* secondPolynom);

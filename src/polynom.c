@@ -3,9 +3,9 @@
 char localVariables[26];
 polynomMember* localPolynoms[26];
 
-int localVariablesLen = 0, localPolynomsLen = 0;
+long localVariablesLen = 0, localPolynomsLen = 0;
 
-polynomMember* createPolynom(int initFactor, int initDegree, char initBase)
+polynomMember* createPolynom(long initFactor, long initDegree, char initBase)
 {
     polynomMember* tmp = (polynomMember*)malloc(sizeof(polynomMember));
     tmp->factor = initFactor;
@@ -17,11 +17,7 @@ polynomMember* createPolynom(int initFactor, int initDegree, char initBase)
 
 void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 {
-    // printf("\nFirst summand: ");
-    // printPolynom(firstPolynom);
-    // printf("Second summand: ");
-    // printPolynom(secondPolynom);
-    
+   
     checkPolynomBases(firstPolynom, secondPolynom);
     if (firstPolynom->base != 0) secondPolynom->base = firstPolynom->base;
     else firstPolynom->base = secondPolynom->base;
@@ -38,7 +34,7 @@ void summPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
     
     for(polynomMember* secondMember = secondPolynom; secondMember != NULL; secondMember = secondMember->nextMember)
     {
-        int added = 0;
+        long added = 0;
         for ( polynomMember* counterTmp =  firstPolynom; counterTmp != NULL; counterTmp = counterTmp->nextMember)
         {
             if(counterTmp->degree == secondMember->degree)
@@ -89,7 +85,7 @@ void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
     
     // for(polynomMember* secondMember = secondPolynom; secondMember != NULL; secondMember = secondMember->nextMember)
     // {
-    //     int added = 0;
+    //     long added = 0;
     //     for ( polynomMember* counterTmp =  firstPolynom; counterTmp != NULL; counterTmp = counterTmp->nextMember)
     //     {
     //         if(counterTmp->degree == secondMember->degree)
@@ -115,6 +111,7 @@ void substractPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 
 polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMember* secondPolynom)
 {
+
     checkPolynomBases(firstPolynom, secondPolynom);
     if (firstPolynom->base != 0) secondPolynom->base = firstPolynom->base;
     else firstPolynom->base = secondPolynom->base;
@@ -139,10 +136,17 @@ polynomMember* multiplePolynomByPolynom(polynomMember* firstPolynom, polynomMemb
             summPolynom(tmp, createPolynom(firstMember->factor * secondMember->factor, firstMember->degree + secondMember->degree, firstMember->base));
         }
     }
+    // printf("\nMultiplying :\n");
+    // printPolynom(firstPolynom);
+    // printf("\nby\n");
+    // printPolynom(secondPolynom);
+    // printf("\nresult:\n");
+    // printPolynom(tmp);
+    // printf("\n------------------------\n");
     return tmp;
 }
 
-void multiplePolynomByFactor(polynomMember* firstPolynom, int factor)
+void multiplePolynomByFactor(polynomMember* firstPolynom, long factor)
 {
     // firstPolynom->factor *= factor; 
     // printPolynom(firstPolynom);
@@ -157,7 +161,7 @@ void multiplePolynomByFactor(polynomMember* firstPolynom, int factor)
     }
 }
 
-polynomMember* powPolynom(polynomMember* polynom, int deg)
+polynomMember* powPolynom(polynomMember* polynom, long deg)
 {
     sortPolynom(polynom);
     if (polynom->factor == 0 && deg == 0) 
@@ -166,7 +170,7 @@ polynomMember* powPolynom(polynomMember* polynom, int deg)
         exit(1);
     }
     polynomMember* tmp = createPolynom(1, 0, polynom->base);
-    for (int i = 0; i < deg; i++)
+    for (long i = 0; i < deg; i++)
     {
         tmp = multiplePolynomByPolynom(tmp, polynom);
     }
@@ -184,11 +188,11 @@ polynomMember* powPolynomStatement(polynomMember* polynom, polynomMember* deg)
     }
     
     while(deg->factor == 0 && deg->nextMember != NULL) deg = deg->nextMember;
-    if (deg->degree == 0 && deg->factor != 0)
+    if (deg->degree == 0)
     {
         polynomMember* tmp = createPolynom(1, 0, polynom->base);
         
-        for (int i = 0; i < deg->factor; i++)
+        for (long i = 0; i < deg->factor; i++)
         {
             // printPolynom(tmp);
             tmp = multiplePolynomByPolynom(tmp, polynom);
@@ -196,7 +200,7 @@ polynomMember* powPolynomStatement(polynomMember* polynom, polynomMember* deg)
         return tmp;
     }
     printf("Error: trying to polynom ^ polynom\n");
-    printPolynomDebug(deg->nextMember);
+    // printPolynomDebug(deg);
     exit(1);
 }
 
@@ -258,7 +262,7 @@ void checkPolynomBases(polynomMember* firstPolynom, polynomMember* secondPolynom
 
 void sortPolynom(polynomMember* poly)
 {
-    int swapped;
+    long swapped;
     polynomMember *ptr1;
     polynomMember *lptr = NULL, *dptr = poly;
  
@@ -273,8 +277,8 @@ void sortPolynom(polynomMember* poly)
             if (ptr1->degree < ptr1->nextMember->degree) {
                 // Обмен значениями между ptr1 и ptr1->nextMember
                 char tempBase = ptr1->base;
-                int tempFactor = ptr1->factor;
-                int tempDegree = ptr1->degree;
+                long tempFactor = ptr1->factor;
+                long tempDegree = ptr1->degree;
                 ptr1->base = ptr1->nextMember->base;
                 ptr1->factor = ptr1->nextMember->factor;
                 ptr1->degree = ptr1->nextMember->degree;
@@ -312,9 +316,9 @@ void addVariable(char var, polynomMember* poly)
     addToPolynoms(poly, addToVariables(var));
 }
 
-int addToVariables(char var)
+long addToVariables(char var)
 {
-    for (int i = 0; i < localVariablesLen; i++)
+    for (long i = 0; i < localVariablesLen; i++)
     {
         if (localVariables[i] == var)
         {
@@ -326,7 +330,7 @@ int addToVariables(char var)
     return localVariablesLen++;
 }
 
-void addToPolynoms(polynomMember* poly, int position)
+void addToPolynoms(polynomMember* poly, long position)
 {
     if (localPolynoms[position] != NULL)
     {
@@ -340,7 +344,7 @@ void addToPolynoms(polynomMember* poly, int position)
 
 polynomMember* getVariable(char var)
 {
-    int i;
+    long i;
     for(i = 0; i < 26; i++)
     {
         if(localVariables[i] == var)
@@ -361,7 +365,7 @@ polynomMember* summVariableAndPolynom(char var, polynomMember* poly)
 
 void addPolynomToVariable(char var, polynomMember* poly)
 {
-    int i;
+    long i;
     for (i = 0; i < 26; i++)
     {
         if(localVariables[i] == var)
