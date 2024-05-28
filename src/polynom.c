@@ -182,7 +182,9 @@ polynomMember* powPolynomStatement(polynomMember* polynom, polynomMember* deg)
         printf("Error: 0^0\n");
         exit(1);
     }
-    if (deg->degree == 0)
+    
+    while(deg->factor == 0 && deg->nextMember != NULL) deg = deg->nextMember;
+    if (deg->degree == 0 && deg->factor != 0)
     {
         polynomMember* tmp = createPolynom(1, 0, polynom->base);
         
@@ -194,6 +196,7 @@ polynomMember* powPolynomStatement(polynomMember* polynom, polynomMember* deg)
         return tmp;
     }
     printf("Error: trying to polynom ^ polynom\n");
+    printPolynomDebug(deg->nextMember);
     exit(1);
 }
 
@@ -343,6 +346,9 @@ polynomMember* getVariable(char var)
         if(localVariables[i] == var)
             return localPolynoms[i];
     }
+
+    printf("Variable '%c' not found\n", var);
+    exit(1);
     return NULL;
 }
 polynomMember* summVariableAndPolynom(char var, polynomMember* poly)
